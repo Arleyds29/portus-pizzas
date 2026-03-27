@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portu's Pizzas – Zuata</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #c0392b;
+      --red-dark: #922b21;
+      --yellow: #f39c12;
+      --yellow-light: #f8c471;
+      --cream: #fdf6ec;
+      --dark: #1a0a00;
+      --text: #3d1f00;
+      --card-bg: #fff9f2;
+      --shadow: 0 4px 24px rgba(192,57,43,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(26,10,0,0.92);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 32px;
+    }
+    nav .logo-nav { height: 52px; border-radius: 50%; }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul li a {
+      color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    nav ul li a:hover { color: var(--yellow); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 60% 40%, #7b1c1c 0%, #1a0a00 70%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+    .hero-logo {
+      width: 170px; height: 170px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 0 6px var(--yellow), 0 0 40px rgba(243,156,18,0.4);
+      animation: pulse 3s ease-in-out infinite;
+      margin-bottom: 28px;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 6px var(--yellow), 0 0 40px rgba(243,156,18,0.4); }
+      50% { box-shadow: 0 0 0 10px var(--yellow-light), 0 0 60px rgba(243,156,18,0.6); }
+    }
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .hero h1 span { color: var(--yellow); }
+    .hero p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem; font-weight: 600;
+      margin-top: 14px; letter-spacing: 1px;
+    }
+    .hero-badges {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      margin-top: 28px;
+    }
+    .badge {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; padding: 8px 20px;
+      border-radius: 50px; font-weight: 700; font-size: 0.85rem;
+      backdrop-filter: blur(4px);
+    }
+    .badge.red { background: var(--red); border-color: var(--red); }
+
+    .hero-scroll {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .hero-scroll::after {
+      content: '▾'; font-size: 1.4rem; color: var(--yellow);
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SECTION TITLES ── */
+    .section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--red);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .section-title span { color: var(--dark); }
+    .section-sub {
+      text-align: center; color: #888;
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    /* ── CAROUSEL ── */
+    .gallery-wrap {
+      background: var(--dark);
+      padding: 80px 0 90px;
+      overflow: hidden;
+    }
+    .carousel-container {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .carousel-track-wrap {
+      overflow: hidden;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    .carousel-slide {
+      min-width: 100%;
+      position: relative;
+      aspect-ratio: 4/3;
+    }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel-slide .slide-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(26,10,0,0.85) 0%, transparent 100%);
+      padding: 32px 28px 22px;
+      color: #fff;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Arrows */
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 50px; height: 50px;
+      background: rgba(26,10,0,0.7);
+      border: 2px solid rgba(243,156,18,0.5);
+      border-radius: 50%;
+      color: var(--yellow);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+    .carousel-btn:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+      transform: translateY(-50%) scale(1.1);
+    }
+    .carousel-btn.prev { left: -4px; }
+    .carousel-btn.next { right: -4px; }
+
+    /* Dots */
+    .carousel-dots {
+      display: flex; justify-content: center; gap: 10px;
+      margin-top: 24px;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border: none;
+    }
+    .dot.active {
+      background: var(--yellow);
+      transform: scale(1.3);
+    }
+
+    /* Thumbnails strip */
+    .carousel-thumbs {
+      display: flex; gap: 10px; justify-content: center;
+      margin-top: 18px; flex-wrap: wrap;
+    }
+    .thumb {
+      width: 64px; height: 64px;
+      border-radius: 10px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.5;
+      transition: opacity 0.3s, border-color 0.3s, transform 0.2s;
+    }
+    .thumb.active {
+      border-color: var(--yellow);
+      opacity: 1;
+      transform: scale(1.08);
+    }
+    .thumb:hover { opacity: 0.85; }
+
+    /* ── MENU ── */
+    .menu-wrap { background: #fff8f0; }
+
+    /* Entradas */
+    .menu-category {
+      margin-bottom: 52px;
+    }
+    .cat-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem; color: var(--red);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--yellow);
+      padding-bottom: 8px;
+    }
+    .cat-title .emoji { font-size: 1.5rem; }
+
+    /* Pizza grid */
+    .pizza-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .pizza-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px 20px;
+      border: 1px solid rgba(192,57,43,0.1);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pizza-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(192,57,43,0.18);
+    }
+    .pizza-card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem; color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .pizza-card p { font-size: 0.88rem; color: #777; line-height: 1.5; }
+    .pizza-sizes {
+      display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .size-tag {
+      background: var(--red);
+      color: #fff; font-size: 0.75rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .size-tag.yellow { background: var(--yellow); color: var(--dark); }
+
+    /* Entradas cards */
+    .entradas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .entrada-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 16px;
+      border: 1px solid rgba(192,57,43,0.1);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .entrada-card:hover { transform: translateY(-3px); }
+    .entrada-card .icon { font-size: 2rem; margin-bottom: 8px; }
+    .entrada-card h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--dark); }
+    .entrada-card p { font-size: 0.82rem; color: #888; margin-top: 4px; }
+
+    /* Combos */
+    .combos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .combo-card {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 6px 24px rgba(192,57,43,0.3);
+      transition: transform 0.2s;
+    }
+    .combo-card:hover { transform: translateY(-4px); }
+    .combo-card h3 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 6px; }
+    .combo-card ul { list-style: none; margin-top: 10px; }
+    .combo-card ul li { font-size: 0.88rem; padding: 3px 0; opacity: 0.9; }
+    .combo-card ul li::before { content: '✓ '; font-weight: 800; }
+
+    /* Bebidas */
+    .bebidas-list {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .bebida-chip {
+      background: var(--yellow);
+      color: var(--dark);
+      font-weight: 800; font-size: 0.9rem;
+      padding: 10px 20px; border-radius: 50px;
+    }
+
+    /* Adicionales */
+    .adicionales-wrap {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .adicional-chip {
+      background: #fff;
+      border: 2px solid var(--red);
+      color: var(--red);
+      font-weight: 700; font-size: 0.85rem;
+      padding: 6px 16px; border-radius: 50px;
+    }
+
+    /* ── INFO SECTION ── */
+    .info-wrap {
+      background: var(--dark);
+      color: #fff;
+      padding: 80px 24px;
+    }
+    .info-grid {
+      max-width: 1000px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+    }
+    .info-block h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem; color: var(--yellow);
+      margin-bottom: 12px;
+    }
+    .info-block p, .info-block a {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.95rem; line-height: 1.7;
+      text-decoration: none;
+      display: block;
+    }
+    .info-block a:hover { color: var(--yellow); }
+
+    /* Map placeholder */
+    .map-placeholder {
+      margin-top: 60px;
+      max-width: 1000px; margin-left: auto; margin-right: auto;
+    }
+    .map-placeholder h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem; color: var(--yellow);
+      text-align: center; margin-bottom: 16px;
+    }
+    .map-embed {
+      width: 100%; height: 300px;
+      border-radius: 16px; overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 2px dashed rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.9rem; font-weight: 700;
+    }
+    .map-embed .map-icon { font-size: 2.5rem; }
+
+    /* Social */
+    .social-links {
+      display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; padding: 10px 18px;
+      border-radius: 50px; font-weight: 700; font-size: 0.9rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .social-btn:hover { background: var(--yellow); color: var(--dark); }
+    .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── FLOATING WS BUTTON ── */
+    .ws-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      background: #25d366;
+      color: #fff;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: ws-bounce 2.5s ease-in-out infinite;
+    }
+    .ws-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(37,211,102,0.7);
+    }
+    @keyframes ws-bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .ws-float svg { width: 32px; height: 32px; fill: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0d0500;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 20px;
+      font-size: 0.82rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav ul { gap: 14px; }
+      nav ul li a { font-size: 0.82rem; }
+    }
+    @media (max-width: 480px) {
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <img src="public/logo.jpeg" alt="Portu's Pizzas" class="logo-nav" />
+    <ul>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#menu">Menú</a></li>
+      <li><a href="#info">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="public/logo.jpeg" alt="Portu's Pizzas Logo" class="hero-logo" />
+    <h1>Portu's <span>Pizzas</span></h1>
+    <p>🍕 Zuata · Ven. a Sáb. &amp; Dom. · 6:30 PM – 11:00 PM</p>
+    <div class="hero-badges">
+      <span class="badge red">🔥 Pizzas Artesanales</span>
+      <span class="badge">📍 Zuata</span>
+      <span class="badge">⏰ Vie – Dom · 6:30 PM a 11 PM</span>
+    </div>
+    <div class="hero-scroll"></div>
+  </section>
+
+  <!-- CAROUSEL -->
+  <div class="gallery-wrap" id="galeria">
+    <div style="text-align:center; padding: 0 0 40px;">
+      <h2 class="section-title" style="color:#f39c12;">Nuestras <span style="color:#fff;">Pizzas</span></h2>
+      <p class="section-sub" style="color: rgba(255,255,255,0.4);">hechas con amor, ingredientes frescos</p>
+    </div>
+
+    <div class="carousel-container">
+      <!-- Track -->
+      <div class="carousel-track-wrap">
+        <div class="carousel-track" id="carouselTrack">
+          
+          <div class="carousel-slide">
+            <img src="public/pizza3.png" alt="Pizza Charcutera" />
+            <div class="slide-label">🍕 Las Mejores Pizza</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="public/pizza4.png" alt="Pizza Clásica" />
+            <div class="slide-label">🍕 Pizza A Tu Gusto</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="public/pizza5.png" alt="Variedad de Pizzas" />
+            <div class="slide-label">🍕 Variedad de Pizzas</div>
+          </div>
+          <div class="carousel-slide">
+            <img src="public/pizza6.png" alt="Pizza del Día" />
+            <div class="slide-label">🍕 Pizza del Día</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrows -->
+      <button class="carousel-btn prev" id="prevBtn" aria-label="Anterior">&#8592;</button>
+      <button class="carousel-btn next" id="nextBtn" aria-label="Siguiente">&#8594;</button>
+    </div>
+
+    <!-- Dots -->
+    <div class="carousel-dots" id="carouselDots"></div>
+
+    <!-- Thumbnails -->
+    <div class="carousel-thumbs" id="carouselThumbs">
+      
+      <img src="public/pizza3.png" class="thumb active" data-index="0" alt="1" />
+      <img src="public/pizza4.png" class="thumb" data-index="1" alt="2" />
+      <img src="public/pizza5.png" class="thumb" data-index="2" alt="3" />
+      <img src="public/pizza6.png" class="thumb" data-index="3" alt="4" />
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div class="menu-wrap" id="menu">
+    <div class="section">
+
+      <h2 class="section-title">Nuestro <span>Menú</span></h2>
+      <p class="section-sub">todo hecho con pasión y los mejores ingredientes</p>
+
+      <!-- ENTRADAS -->
+      <div class="menu-category">
+        <h3 class="cat-title"><span class="emoji">🧆</span> Entradas</h3>
+        <div class="entradas-grid">
+          <div class="entrada-card">
+            <div class="icon">🥟</div>
+            <h3>Tequeños</h3>
+            <p>5 tequeños con salsa</p>
+          </div>
+          <div class="entrada-card">
+            <div class="icon">🍟</div>
+            <h3>Papas Fritas</h3>
+            <p>200g de papas fritas con salsa</p>
+          </div>
+          <div class="entrada-card">
+            <div class="icon">🍗</div>
+            <h3>Nuggets con Papas</h3>
+            <p>150g papas fritas + 5 nuggets de pollo con salsa</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIZZAS -->
+      <div class="menu-category">
+        <h3 class="cat-title"><span class="emoji">🍕</span> Pizzas</h3>
+        <div class="pizza-grid">
+          <div class="pizza-card">
+            <h3>Clásica</h3>
+            <p>Salsa napolitana, queso mozzarella y jamón</p>
+            <div class="pizza-sizes">
+              <span class="size-tag">25 cm</span>
+              <span class="size-tag yellow">33 cm</span>
+            </div>
+          </div>
+          <div class="pizza-card">
+            <h3>Charcutera</h3>
+            <p>Salsa napolitana, queso mozzarella, jamón, tocineta y pepperoni</p>
+            <div class="pizza-sizes">
+              <span class="size-tag">25 cm</span>
+              <span class="size-tag yellow">33 cm</span>
+            </div>
+          </div>
+          <div class="pizza-card">
+            <h3>Veggie</h3>
+            <p>Salsa napolitana, queso mozzarella, jamón, maíz, cebolla, pimentón, champiñones y aceitunas negras</p>
+            <div class="pizza-sizes">
+              <span class="size-tag">25 cm</span>
+              <span class="size-tag yellow">33 cm</span>
+            </div>
+          </div>
+          <div class="pizza-card">
+            <h3>Especial</h3>
+            <p>Salsa napolitana, queso mozzarella, jamón, maíz, tocineta, pepperoni, cebolla, pimentón y aceitunas negras</p>
+            <div class="pizza-sizes">
+              <span class="size-tag">25 cm</span>
+              <span class="size-tag yellow">33 cm</span>
+            </div>
+          </div>
+          <div class="pizza-card">
+            <h3>Caprichosa</h3>
+            <p>Salsa napolitana, queso mozzarella, jamón, maíz, tocineta, pepperoni, cebolla, pimentón, champiñones y aceitunas negras</p>
+            <div class="pizza-sizes">
+              <span class="size-tag">25 cm</span>
+              <span class="size-tag yellow">33 cm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADICIONALES -->
+      <div class="menu-category">
+        <h3 class="cat-title"><span class="emoji">➕</span> Ingredientes Adicionales</h3>
+        <div class="adicionales-wrap">
+          <span class="adicional-chip">Jamón</span>
+          <span class="adicional-chip">Pimentón</span>
+          <span class="adicional-chip">Cebolla</span>
+          <span class="adicional-chip">Maíz</span>
+          <span class="adicional-chip">Champiñones</span>
+          <span class="adicional-chip">Tocineta</span>
+          <span class="adicional-chip">Pepperoni</span>
+          <span class="adicional-chip">Aceitunas Negras</span>
+        </div>
+      </div>
+
+      <!-- COMBOS -->
+      <div class="menu-category">
+        <h3 class="cat-title"><span class="emoji">🎁</span> Portu's Combos</h3>
+        <div class="combos-grid">
+          <div class="combo-card">
+            <h3>Solitario</h3>
+            <ul>
+              <li>1 Pizza Clásica 25cm</li>
+              <li>1 Ración de Papas</li>
+              <li>1 Refresco 350ml</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Antojito</h3>
+            <ul>
+              <li>1 Pizza Charcutera 25cm</li>
+              <li>1 Ración de Papas</li>
+              <li>1 Refresco 350ml</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Panas</h3>
+            <ul>
+              <li>2 Pizzas Clásicas 25cm</li>
+              <li>1 Ración de Tequeños</li>
+              <li>1 Refresco 1L</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Amistad</h3>
+            <ul>
+              <li>1 Pizza Especial 33cm</li>
+              <li>2 Raciones de Papas</li>
+              <li>1 Refresco 1L</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Romántico</h3>
+            <ul>
+              <li>1 Pizza Clásica 33cm</li>
+              <li>1 Ración de Tequeños</li>
+              <li>2 Ingredientes adicionales</li>
+              <li>1 Refresco 1L</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Familiar</h3>
+            <ul>
+              <li>2 Pizzas Clásicas 33cm</li>
+              <li>1 Ingrediente Adicional</li>
+              <li>2 Raciones de Papas</li>
+              <li>2 Refrescos 1L</li>
+            </ul>
+          </div>
+          <div class="combo-card">
+            <h3>Portu's VIP</h3>
+            <ul>
+              <li>3 Pizzas Clásicas 33cm</li>
+              <li>2 Ingredientes adicionales</li>
+              <li>2 Raciones de Papas</li>
+              <li>2 Raciones de Tequeños</li>
+              <li>2 Refrescos 1L</li>
+            </ul>
+          </div>
+          <div class="combo-card" style="background: linear-gradient(135deg, #b7950b, #7d6608);">
+            <h3>Portu's Kids</h3>
+            <ul>
+              <li>1 Ración de Papas Fritas</li>
+              <li>5 Nuggets de Pollo con salsa</li>
+              <li>1 Jugo 200ml</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEBIDAS -->
+      <div class="menu-category">
+        <h3 class="cat-title"><span class="emoji">🥤</span> Bebidas</h3>
+        <div class="bebidas-list">
+          <span class="bebida-chip">Refresco 350ml</span>
+          <span class="bebida-chip">Refresco 1L</span>
+          <span class="bebida-chip">Refresco 2L</span>
+          <span class="bebida-chip">Malta 250ml</span>
+          <span class="bebida-chip">Jugo 200ml</span>
+          <span class="bebida-chip">Jugo 1.5L</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="info-wrap" id="info">
+    <div class="info-grid">
+
+      <div class="info-block">
+        <h3>📍 Ubicación</h3>
+        <p>Zuata, La Victoria - Edo. Aragua, Venezuela</p>
+      </div>
+
+      <div class="info-block">
+        <h3>⏰ Horarios</h3>
+        <p>Viernes · Sábado · Domingo</p>
+        <p>6:30 PM – 11:00 PM</p>
+      </div>
+
+      <div class="info-block">
+        <h3>📱 Contáctanos</h3>
+        <a href="https://wa.me/584120498117" target="_blank" rel="noopener">+58 412 049 8117</a>
+      </div>
+
+      <div class="info-block">
+        <h3>🌐 Redes Sociales</h3>
+        <div class="social-links">
+          <!-- Coloca tu usuario de Instagram aquí -->
+          <a href="https://instagram.com/TU_USUARIO" target="_blank" rel="noopener" class="social-btn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            Instagram
+          </a>
+          <!-- Coloca tu usuario de TikTok aquí -->
+          <a href="https://tiktok.com/@TU_USUARIO" target="_blank" rel="noopener" class="social-btn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.35 6.35 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.88a8.2 8.2 0 004.83 1.56V7a4.85 4.85 0 01-1.06-.31z"/>
+            </svg>
+            TikTok
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAP -->
+    <div class="map-placeholder" style="margin-top:48px; padding: 0 24px;">
+      <h3 style="font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--yellow); text-align:center; margin-bottom:16px;">📍 Encuéntranos</h3>
+      <!-- 
+        Para insertar Google Maps:
+        1. Ve a Google Maps y busca tu ubicación
+        2. Haz clic en "Compartir" → "Insertar mapa"
+        3. Copia el iframe y reemplaza el div de abajo
+      -->
+      <div style="width:100%; border-radius:16px; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3927.1924078185784!2d-67.39796642592151!3d10.165010189948966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e80210026f089dd%3A0xe862a42a0880789c!2sPortu&#39;s%20Pizzas!5e0!3m2!1ses-419!2sve!4v1774586304264!5m2!1ses-419!2sve" 
+          width="100%"
+          height="300"
+          style="border:0; display:block;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Portu's Pizzas ubicación">
+        </iframe>
+          <span style="font-size:2.5rem">🗺️</span>
+          <span>Mapa de Google Maps</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Portu's Pizzas · Zuata, La Victoria - Edo. Aragua · Hecho con 🍕 y mucho amor</p>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/584120498117?text=Hola!%20Quiero%20hacer%20un%20pedido%20en%20Portu's%20Pizzas%20🍕"
+     target="_blank" rel="noopener"
+     class="ws-float"
+     title="Pedir por WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <script>
+    (function () {
+      const track = document.getElementById('carouselTrack');
+      const slides = track.querySelectorAll('.carousel-slide');
+      const dotsWrap = document.getElementById('carouselDots');
+      const thumbs = document.querySelectorAll('.thumb');
+      const total = slides.length;
+      let current = 0;
+      let autoTimer;
+
+      // Build dots
+      slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'dot' + (i === 0 ? ' active' : '');
+        btn.setAttribute('aria-label', 'Slide ' + (i + 1));
+        btn.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(btn);
+      });
+      const dots = dotsWrap.querySelectorAll('.dot');
+
+      function goTo(n) {
+        current = (n + total) % total;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
+      }
+
+      document.getElementById('prevBtn').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+      document.getElementById('nextBtn').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+      thumbs.forEach(t => {
+        t.addEventListener('click', () => { goTo(+t.dataset.index); resetAuto(); });
+      });
+
+      // Swipe support
+      let startX = 0;
+      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+      });
+
+      function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 4000); }
+      function resetAuto() { clearInterval(autoTimer); startAuto(); }
+
+      startAuto();
+    })();
+  </script>
+
+</body>
+</html>
